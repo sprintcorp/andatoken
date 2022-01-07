@@ -16,27 +16,20 @@ async function erc_transfer(req) {
         const { receiverAddress, fromAddress, contractAddress, privateKey, amount } = req.body;
         var AbiArray = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../global-files/tt3.json'), 'utf-8'));
         var web3 = new Web3(new Web3.providers.HttpProvider(PROVIDER_URL));
-        //var transferAmount = web3.utils.toWei(amount.toString(), "ether");
-        //console.log("Amount => ", transferAmount);
+       // var transferAmount = web3.utils.toWei(amount.toString(), "ether");
+        // console.log("Amount => ", transferAmount);
         var nonce = await web3.eth.getTransactionCount(fromAddress);
         const contract = new web3.eth.Contract(AbiArray, contractAddress);
+       // console.log(contract,"dikha de")
         const decimal = await contract.methods.decimals().call()
-         console.log(decimal, "sdf")
-        var transferAmount = String(amount*(10 ** decimal))
+        // console.log(decimal, "sdf")
+        var transferAmount = String(amount*(10**decimal))
         const data = contract.methods.transfer(receiverAddress, transferAmount);
-        // web3.eth.estimateGas({
-        //     to: receiverAddress,
-        //     data: data.encodeABI()
-        // })
-        //.then(console.log);
         let gasPrices = await getCurrentGasPrices();
-        console.log(gasPrices,"////////////")
             var rawTransaction = {
                 nonce: web3.utils.toHex(nonce),
-               // gasPrice: web3.utils.toHex(gasPrices.low * 1e9),
-                gasPrice: gasPrices.medium*3 * 1000000000,
-               // gasLimit: web3.utils.toHex(0x250CA),
-                gasLimit: 200000,
+                gasPrice: web3.utils.toHex(150 * 1e9),
+                gasLimit: web3.utils.toHex(0x250CA),
                 to: contractAddress,
                 value: "0x0",
                 data: data.encodeABI(),
@@ -66,7 +59,7 @@ async function erc_transfer(req) {
         } catch (error) {
             return reject(error.message)
         }
-        
+
     });
     }
 

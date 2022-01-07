@@ -2,7 +2,8 @@ const commonFile = require('../global-files/common-file.js')
 const RippleAPI = require('ripple-lib').RippleAPI
 const FEE="0.000012"
 const api = new RippleAPI({
-     server:	'wss://s1.ripple.com/'
+   //  server:	'wss://s.altnet.rippletest.net:51233'
+     server:	'wss://s2.ripple.com/'
  });
 
  submitTxn = (signedTransactionTemp, cb) => {
@@ -110,7 +111,7 @@ preparePaymentFn = (sourceAddr, destAddr, destTag, withdrawAmt, cb ) => {
         console.log("1111", seqNo)
         if (seqNo) {
             console.log("22",commonFile.bigNumberOpera(Number(balInAddr), Number(withdrawAmt), '-', 6))
-            if(commonFile.bigNumberOpera(Number(balInAddr), Number(withdrawAmt), '-', 6) >= 20){
+            if(commonFile.bigNumberOpera(Number(balInAddr), Number(withdrawAmt), '-', 6) >= 0){
                 console.log("true val")
                 api.connect().then(() => {
                     console.log("check payment===>>>", payment)
@@ -140,7 +141,7 @@ preparePaymentFn = (sourceAddr, destAddr, destTag, withdrawAmt, cb ) => {
 
  module.exports = {
 
-    "generate_new_addr": (req, res) => {
+   "generate_new_addr": (req, res) => {
         let addr = {}
         api.connect().then(() => {
             return api.generateAddress();
@@ -156,6 +157,8 @@ preparePaymentFn = (sourceAddr, destAddr, destTag, withdrawAmt, cb ) => {
             return commonFile.responseHandler(res, 500, "Internal server error.")
         });
     },
+
+
 
     "get_addr_info": (req, res) => {
         if (!req.body.addr) {

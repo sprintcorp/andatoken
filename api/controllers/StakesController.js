@@ -1,4 +1,5 @@
 
+ const conseiljssoftsigner = require('conseiljs-softsigner');
  const { wallet } = require('@moonstake/moonstakejs');
  const ipbConfig = {
   apiKey: 'bd9e5c98-385b-4d01-af14-685f9c30ec68',
@@ -55,31 +56,50 @@ const moonstakeConfig = {
   
   async function xtz(params){
     return new Promise(async(resolve, reject) => {
+      console.log("aaya?")
+      console.log(params.mnemonic);
       let xtzWallet = new wallet.XTZ({
-        mnemonic: params.mnemonic
+        mnemonic: params.mnemonic,
       });
+      console.log("xtzWallet :", xtzWallet)
      try {
-      let keystore=await xtzWallet.createKeyStore();
-      console.log(keystore,"xcbv")
+      // let keystore=await xtzWallet.createKeyStore();
+      let derivationPath = `m/44'/1729'/0'/0'`
+      let keystore = await conseiljssoftsigner.KeyStoreUtils.restoreIdentityFromMnemonic(params.mnemonic, '', '', derivationPath,'');
+      console.log("keystore :", keystore)
+      xtzWallet.setKeystore(keystore);
+
      } catch (error) {
       return reject(error);
      } 
-      
+    //  console.log()
+    // xtzWallet.privateKey = keystore.secretKey 
+    // xtzWallet.password = ''
+    xtzWallet.setMnemonic(params.mnemonic);
+    xtzWallet.setPassword('');
+    xtzWallet.setPrivateKey('edskRwTibGKNsf5UqSUp5VfAT95wS6x3CqV5DsjkGpvohrzg6SrLQ4rHdSxpaVZUGt85XWrTQBQguEkL4sMHj3icS4um12ch8J');
+    xtzWallet.setMemo('XTZ');
+
       xtzWallet.initApi({
-        conseilUrl:  'https://conseil-prod.cryptonomic-infra.tech',
+        conseilUrl:  'https://teznode.letzbake.com',
         conseilApiKey: ' a7670046-f49a-497a-82f3-41cc49dbc444', 
         conseilNetwork:  'mainnet',
-        tezosNode: 'https://tezos-prod.cryptonomic-infra.tech'
+        tezosNode: 'https://teznode.letzbake.com'
       });
+
       xtzWallet.initMoonstakeApi(moonstakeConfig);
-      xtzWallet.setMemo('XTZ');
       try {
         let resp=await xtzWallet.sendAndDelegateTx()
-        console.log(resp, "gkjkj")
+        console.log("asbmnasbfnaaaaaa", resp)
         if (!resp){
           return reject("something went wrong")
         }
-        resolve(resp)
+        var mySubString = resp.substring(
+          resp.indexOf('o') + 1, 
+          resp.lastIndexOf('"')
+      );
+      console.log("mySubString",mySubString);
+        resolve(mySubString)
       } catch (error) {
         return reject(error);
       } 
@@ -112,12 +132,8 @@ const moonstakeConfig = {
     xtz_stake: (req, res) => {
   
         const params=req.body;
-        xtz(params).then((resp)=>{
-          if(resp){
-           return res.send({ code: 200,msg:resp})
-          }else{
-           return res.send({ code: 400,msg:'something went wrong'})   
-          }
+        xtz(params).then((resp)=>{    
+           return res.send({ code: 200,data:resp})
         }).catch((err)=>{
          return res.send({ code: 400,msg:err})
         })

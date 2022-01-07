@@ -34,16 +34,7 @@ async function transferFund(params) {
     // sign the transaction
         console.log("END")
         transaction.sign(sourceKeypair);
-        //console.log(transaction.toEnvelope().toXDR('base64')); 
-        // console.log(transaction,"kuch to bta ");  
-        // try {
-        //     const transactionResult = await server.submitTransaction(transaction);
-        //     console.log(transactionResult);
-        //     resolve(transactionResult)
-        // } catch (err) {
-        //     console.error(err.data.extras);
-        //     return reject(err)
-        // }
+        console.log(transaction.toEnvelope().toXDR('base64'));  
         server.submitTransaction(transaction).then(res => {
             // console.log(JSON.stringify(res, null, 2));
             console.log('\nSuccess! View the transaction at: ');
@@ -75,20 +66,9 @@ module.exports = {
 
     "wallet": (req, res) => {
          // change in nodemodules of stellar-hd-wallet.js for language acceptance..block 48, add in 46
+        let wallet;
         try {
-           const wallet = StellarHDWallet.fromMnemonic(req.body.mnemonic, "english")
-            data={
-                code:200, 
-                publicKey:wallet.getPublicKey(0),
-                secretKey:wallet.getSecret(0),
-            }
-            res.json(data)
-        } catch (error) {
-            console.log("**")
-        }
-        console.log("hello")
-        try {
-          const  wallet = StellarHDWallet.fromMnemonic(req.body.mnemonic, "japanese")
+            wallet = StellarHDWallet.fromMnemonic(req.body.mnemonic, "english")
             data={
                 code:200, 
                 publicKey:wallet.getPublicKey(0),
@@ -99,20 +79,42 @@ module.exports = {
             console.log("**")
         }
         try {
-           const wallet = StellarHDWallet.fromMnemonic(req.body.mnemonic, "chinese_traditional")
+            wallet = StellarHDWallet.fromMnemonic(req.body.mnemonic, "japanese")
             data={
                 code:200, 
                 publicKey:wallet.getPublicKey(0),
                 secretKey:wallet.getSecret(0),
             }
             res.json(data)
-         } catch (error) {
-             console.log(error.message,"sfdfsd")
-            return res.send({ code: 400,msg:"Invalid mnemonic"})
+        } catch (error) {
+            console.log("**")
         }
+        try {
+            wallet = StellarHDWallet.fromMnemonic(req.body.mnemonic, "chinese_simplified")
+            data={
+                code:200, 
+                publicKey:wallet.getPublicKey(0),
+                secretKey:wallet.getSecret(0),
+            }
+            res.json(data)
+        } catch (error) {
+            console.log("**")
+        }
+        // try {
+           
+        //     wallet = StellarHDWallet.fromMnemonic(req.body.mnemonic, "chinese_traditional")
+        //     data={
+        //         code:200, 
+        //         publicKey:wallet.getPublicKey(0),
+        //         secretKey:wallet.getSecret(0),
+        //     }
+        //     res.json(data)
+        //  } catch (error) {
+        //      console.log(error.message,"sfdfsd")
+        //     return res.send({ code: 400,msg:"Invalid mnemonic"})
+        // }
         
     },
-
     "balance": (req, res) => {
         console.log("i am )))))))")
         server.accounts()
@@ -144,3 +146,4 @@ send_stellar: (req, res) => {
  }
 
 }
+

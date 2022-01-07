@@ -12,9 +12,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const HttpProvider = TronWeb.providers.HttpProvider;
-const fullNode = new HttpProvider("https://api.shasta.trongrid.io");
-const solidityNode = new HttpProvider("https://api.shasta.trongrid.io");
-const eventServer = new HttpProvider("https://api.shasta.trongrid.io");
+const fullNode = new HttpProvider("https://api.trongrid.io");
+const solidityNode = new HttpProvider("https://api.trongrid.io");
+const eventServer = new HttpProvider("https://api.trongrid.io");
 
 async function transfer(params) {
     
