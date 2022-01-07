@@ -93,6 +93,12 @@ module.exports = function(app) {
     app.route('/eth/temp-transfer')
     .post(tempEthereum.get_transfer);
 
+    app.route('/eth/get-balance')
+    .post(tempEthereum.get_balance);
+  
+    app.route('/eth/generate-address')
+    .post(tempEthereum.generate_address);
+
     app.route('/erc/temp-transfer')
     .post(tempErc.get_transfer);
 

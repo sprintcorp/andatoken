@@ -91,9 +91,9 @@ async function setDynamicPrice(fees, prices) {
   return ret;
 }
 
+
 module.exports = {
   get_transfer: (req, res) => {
-
     console.log("req.body======>>>", req.body)
     if (!req.body.privateKey || !req.body.fromAddr || !req.body.toAddr) {
       return res.send({ code: 400, message: "Parameters Missing!!" })
@@ -107,11 +107,33 @@ module.exports = {
         return res.send({ code: 200,msg:'success',hash:resp.link.split('/')[4]})
        }else{
         return res.send({ code: 400,msg:'Insufficient funds'})
-
        }
-      
      }).catch((err)=>{
       return res.send({ code: 400,msg:err})
      })
-  }
+  },
+  get_balance: (req, res) => {
+    if (!req.body.address) {
+      return res.send({ code: 400, message: "Parameters Missing!!" })
+    }
+    getBalance(req.body.address).then((resp) => {
+      return res.send({ code: 200,msg:'success',balance:resp})
+    }).catch((error) => {
+      return res.send({ code: 400,msg:error})
+    })
+  },
+  generate_address: (req, res) => {
+    if (!req.body.password) {
+      return res.send({ code: 400, message: "Parameters Missing!!" })
+    }
+    else {
+      var privateKey = web3.eth.accounts.wallet.create(1, req.body.password)
+      var objInfo = privateKey.length - 1;
+      var result = {
+        address: privateKey[objInfo].address,
+        privateKey: privateKey[objInfo].privateKey
+      }
+      return res.send({ code: 200, Result: result })
+    }
+  },
 }
