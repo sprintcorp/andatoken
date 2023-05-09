@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 //Routes Handling
 
-var routes = require('./api/routes/EthereumRoute'); //importing route
+var routes = require('./api/routes/Route'); //importing route
 
 routes(app); //register the route
 app.use(function(req, res) {
