@@ -11,7 +11,8 @@ const common = require('ethereumjs-common');
 
 const PROVIDER_URL = "https://bsc-dataseed.binance.org"
 const web3 = new Web3(new Web3.providers.HttpProvider(PROVIDER_URL));
-const CONTRACT_ADDRESS = "0xfbbbab59a7ea75bb59bcb7a98e8f020d6de821e9";
+// const CONTRACT_ADDRESS = "0xfbbbab59a7ea75bb59bcb7a98e8f020d6de821e9";
+const CONTRACT_ADDRESS = "0xA9A13BA55224BFCDdd3cf67b73E2051e715fCC05";
 
 
 async function getCurrentGasPrices() {
